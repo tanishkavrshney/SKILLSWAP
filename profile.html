@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | SkillSwap</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #141E30, #243B55);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 350px;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-container h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .profile-container p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Welcome, <span id="userName">User</span>!</h1>
+        <p>You can teach: <strong id="skillTeach"></strong></p>
+        <p>You want to learn: <strong id="skillLearn"></strong></p>
+        <button onclick="editProfile()">Edit Profile</button>
+    </div>
+
+    <script>
+        window.onload = function () {
+    let name = localStorage.getItem("userName") || "User";
+    let teach = localStorage.getItem("skillTeach") || "None";
+    let learn = localStorage.getItem("skillLearn") || "None";
+
+    document.getElementById("userName").textContent = name.toUpperCase();
+    document.getElementById("skillTeach").textContent = teach.toUpperCase();
+    document.getElementById("skillLearn").textContent = learn.toUpperCase();
+    };
+
+    function editProfile(){
+        window.location.href = "index.html";
+    }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkillSwap | Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1d3557;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header {
+      background: #457b9d;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .chat-header h2 {
+      margin: 0;
+    }
+    .chat-header button {
+      background: #e63946;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background: #f1faee;
+      color: black;
+    }
+    .message {
+      margin-bottom: 1rem;
+      padding: 0.7rem;
+      background: #a8dadc;
+      border-radius: 10px;
+      max-width: 60%;
+    }
+    .message.self {
+      background: #457b9d;
+      color: white;
+      align-self: flex-end;
+    }
+    .chat-input {
+      display: flex;
+      padding: 1rem;
+      background: #457b9d;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+    .chat-input button {
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      background: #2a9d8f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-header">
+    <h2 id="chatWith">Chat with ...</h2>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="message">Hi there! 👋</div>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+
+document.getElementById("chatInput").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // prevent line break
+    sendMessage(); // 🟢 same function as button click
+  }
+});
+    const chatUser = localStorage.getItem("chatUserName") || "Unknown";
+    const chatEmail = localStorage.getItem("chatUserEmail") || "No Email";
+    document.getElementById("chatWith").textContent = 'Chat with ${chatUser}';
+  
+    function goBack() {
+      window.location.href = "match3.html";
+    }
+  
+    function generateSmartReply(userMessage) {
+      const msg = userMessage.toLowerCase();
+  
+      if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
+        return "Hey there! 👋 What's up?";
+      }
+      if (msg.includes("learn") || msg.includes("teach") || msg.includes("help")) {
+        return "Sure! I'm happy to help with that. 😊";
+      }
+      if (msg.includes("project") || msg.includes("code")) {
+        return "Coding is fun! What's your project about?";
+      }
+      if (msg.includes("thank")) {
+        return "You're welcome! 🤝";
+      }
+      if (msg.includes("exchange skill")) {
+        return "yeah why not";
+      }
+      if (msg.includes("platform")) {
+        return "from which u want";
+      }
+  
+      // Default reply
+      const replies = [
+        "That's interesting! Tell me more...",
+        "Really? Sounds cool! 😄",
+        "Hmm, never thought about that!",
+        "Let's talk more about it!"
+      ];
+      return replies[Math.floor(Math.random() * replies.length)];
+    }
+  
+    async function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const text = input.value.trim();
+      if (!text) return;
+  
+      // Show your message
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message self";
+      msgDiv.textContent = text;
+      document.getElementById("chatMessages").appendChild(msgDiv);
+      input.value = "";
+  
+      // Scroll to bottom
+      const msgBox = document.getElementById("chatMessages");
+      msgBox.scrollTop = msgBox.scrollHeight;
+  
+      // 🔥 API Call
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify({
+            sender: "You",
+            receiver: chatUser,
+            email: chatEmail,
+            message: text,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+  
+        const result = await res.json();
+        console.log("✅ Message sent to API:", result);
+      } catch (err) {
+        console.error("❌ Error sending message to API:", err);
+      }
+  
+      // 🔁 Smart Auto Reply
+      setTimeout(() => {
+        const reply = document.createElement("div");
+        reply.className = "message";
+        reply.textContent = generateSmartReply(text);
+        document.getElementById("chatMessages").appendChild(reply);
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }, 1500);
+    }
+  </script>
+  
+
+  
+</body>
+</html>
